@@ -7,7 +7,7 @@ function StudentDashboard({ onLogout }) {
   const [tab, setTab] = useState("apply"); // "apply" | "hours" | "feedback"
 
   return (
-    <div className="card">
+    <div className="card card-panel">
       <div className="card-header">
         <div>
           <h1 className="card-title">

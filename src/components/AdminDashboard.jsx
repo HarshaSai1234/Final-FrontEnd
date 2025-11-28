@@ -7,7 +7,7 @@ function AdminDashboard({ onLogout }) {
   const [tab, setTab] = useState("jobs"); // "jobs" | "applications" | "hours"
 
   return (
-    <div className="card">
+    <div className="card card-panel">
       <div className="card-header">
         <div>
           <h1 className="card-title">

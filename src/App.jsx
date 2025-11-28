@@ -5,8 +5,8 @@ import AdminDashboard from "./components/AdminDashboard";
 import StudentDashboard from "./components/StudentDashboard";
 
 function App() {
-  const [role, setRole] = useState(null);          // "admin" | "student" | null
-  const [page, setPage] = useState("login");       // "login" | "admin" | "student" | "logout"
+  const [role, setRole] = useState(null);        // "admin" | "student" | null
+  const [page, setPage] = useState("login");     // "login" | "admin" | "student" | "logout"
 
   const handleLogin = (selectedRole) => {
     setRole(selectedRole);
@@ -22,8 +22,12 @@ function App() {
     setPage("login");
   };
 
+  // layout: centered for login/logout, full-page for dashboards
+  const appClass =
+    page === "login" || page === "logout" ? "app app-center" : "app app-full";
+
   return (
-    <div className="app">
+    <div className={appClass}>
       {page === "login" && <Login onLogin={handleLogin} />}
       {page === "admin" && <AdminDashboard onLogout={handleLogout} />}
       {page === "student" && <StudentDashboard onLogout={handleLogout} />}
