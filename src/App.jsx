@@ -1,37 +1,105 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Login from "./components/Login";
-import Logout from "./components/Logout";
+import Signup from "./components/Signup";
 import AdminDashboard from "./components/AdminDashboard";
 import StudentDashboard from "./components/StudentDashboard";
 
 function App() {
-  const [role, setRole] = useState(null);        // "admin" | "student" | null
-  const [page, setPage] = useState("login");     // "login" | "admin" | "student" | "logout"
+  const [page, setPage] = useState("login");      // login | signup | admin | student
+  const [dark, setDark] = useState(false);
+  const [users, setUsers] = useState([]);         // {name,email,password,role}[]
 
-  const handleLogin = (selectedRole) => {
-    setRole(selectedRole);
-    setPage(selectedRole === "admin" ? "admin" : "student");
+  useEffect(() => {
+    const saved = localStorage.getItem("ws_users");
+    if (saved) {
+      try {
+        setUsers(JSON.parse(saved));
+      } catch {
+        setUsers([]);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("ws_users", JSON.stringify(users));
+  }, [users]);
+
+  const handleLogin = (email, password) => {
+    const user = users.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+    if (!user) return { success: false, reason: "no-user" };
+    if (user.password !== password)
+      return { success: false, reason: "wrong-password" };
+
+    setPage(user.role === "admin" ? "admin" : "student");
+    return { success: true, role: user.role };
+  };
+
+  const handleSignup = (data) => {
+    const exists = users.some(
+      (u) => u.email.toLowerCase() === data.email.toLowerCase()
+    );
+    if (exists) return { success: false, reason: "exists" };
+
+    setUsers((prev) => [...prev, data]);
+    return { success: true };
   };
 
   const handleLogout = () => {
-    setRole(null);
-    setPage("logout");
-  };
-
-  const backToLogin = () => {
     setPage("login");
   };
 
-  // layout: centered for login/logout, full-page for dashboards
-  const appClass =
-    page === "login" || page === "logout" ? "app app-center" : "app app-full";
+  const toggleTheme = () => setDark((prev) => !prev);
+
+  useEffect(() => {
+    const shouldDark = dark && (page === "admin" || page === "student");
+    document.body.classList.toggle("dark", shouldDark);
+  }, [dark, page]);
+
+  useEffect(() => {
+    const isAuthPage = page === "login" || page === "signup";
+    if (isAuthPage) {
+      document.body.classList.add("login-bg");
+      document.body.classList.remove("plain-bg");
+    } else {
+      document.body.classList.remove("login-bg");
+      document.body.classList.add("plain-bg");
+    }
+  }, [page]);
+
+  const wrapperClass =
+    page === "login" || page === "signup" ? "app app-center" : "app app-full";
 
   return (
-    <div className={appClass}>
-      {page === "login" && <Login onLogin={handleLogin} />}
-      {page === "admin" && <AdminDashboard onLogout={handleLogout} />}
-      {page === "student" && <StudentDashboard onLogout={handleLogout} />}
-      {page === "logout" && <Logout onBackToLogin={backToLogin} />}
+    <div className={wrapperClass}>
+      {page === "login" && (
+        <Login
+          onLogin={handleLogin}
+          onShowSignup={() => setPage("signup")}
+        />
+      )}
+
+      {page === "signup" && (
+        <Signup
+          onSignup={handleSignup}
+          onShowLogin={() => setPage("login")}
+        />
+      )}
+
+      {page === "admin" && (
+        <AdminDashboard
+          onLogout={handleLogout}
+          onToggleTheme={toggleTheme}
+        />
+      )}
+
+      {page === "student" && (
+        <StudentDashboard
+          onLogout={handleLogout}
+          onToggleTheme={toggleTheme}
+        />
+      )}
     </div>
   );
 }

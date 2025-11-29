@@ -3,11 +3,11 @@ import AdminJobs from "./AdminJobs";
 import AdminApplications from "./AdminApplications";
 import AdminWorkHours from "./AdminWorkHours";
 
-function AdminDashboard({ onLogout }) {
-  const [tab, setTab] = useState("jobs"); // "jobs" | "applications" | "hours"
+function AdminDashboard({ onLogout, onToggleTheme }) {
+  const [tab, setTab] = useState("jobs");
 
   return (
-    <div className="card card-panel">
+    <div className="page-full">
       <div className="card-header">
         <div>
           <h1 className="card-title">
@@ -17,12 +17,17 @@ function AdminDashboard({ onLogout }) {
             Post opportunities, manage applications, and track student work hours.
           </p>
         </div>
-        <button onClick={onLogout} className="btn btn-secondary">
-          Logout
-        </button>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <button onClick={onToggleTheme} className="btn btn-primary">
+            Toggle Theme
+          </button>
+          <button onClick={onLogout} className="btn btn-secondary">
+            Logout
+          </button>
+        </div>
       </div>
 
-      <nav className="tabs" aria-label="Admin navigation">
+      <nav className="tabs">
         <button
           className={`tab ${tab === "jobs" ? "tab-active" : ""}`}
           onClick={() => setTab("jobs")}

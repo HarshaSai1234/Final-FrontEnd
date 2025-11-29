@@ -3,26 +3,31 @@ import StudentApply from "./StudentApply";
 import StudentWorkHours from "./StudentWorkHours";
 import StudentFeedback from "./StudentFeedback";
 
-function StudentDashboard({ onLogout }) {
-  const [tab, setTab] = useState("apply"); // "apply" | "hours" | "feedback"
+function StudentDashboard({ onLogout, onToggleTheme }) {
+  const [tab, setTab] = useState("apply");
 
   return (
-    <div className="card card-panel">
+    <div className="page-full">
       <div className="card-header">
         <div>
           <h1 className="card-title">
             Student Dashboard <span className="badge">Work-Study Student</span>
           </h1>
           <p className="card-subtitle">
-            Apply for positions, submit your work hours, and view feedback from supervisors.
+            Apply for positions, submit your work hours, and view supervisor feedback.
           </p>
         </div>
-        <button onClick={onLogout} className="btn btn-secondary">
-          Logout
-        </button>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <button onClick={onToggleTheme} className="btn btn-primary">
+            Toggle Theme
+          </button>
+          <button onClick={onLogout} className="btn btn-secondary">
+            Logout
+          </button>
+        </div>
       </div>
 
-      <nav className="tabs" aria-label="Student navigation">
+      <nav className="tabs">
         <button
           className={`tab ${tab === "apply" ? "tab-active" : ""}`}
           onClick={() => setTab("apply")}
