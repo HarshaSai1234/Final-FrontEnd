@@ -3,6 +3,7 @@ import AdminJobs from "./AdminJobs";
 import AdminApplications from "./AdminApplications";
 import AdminWorkHours from "./AdminWorkHours";
 
+
 function AdminDashboard({ onLogout, onToggleTheme }) {
   const [tab, setTab] = useState("jobs");
 

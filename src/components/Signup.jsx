@@ -2,6 +2,9 @@ import { useState } from "react";
 
 function Signup({ onSignup, onShowLogin }) {
   const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("Male");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
@@ -11,12 +14,20 @@ function Signup({ onSignup, onShowLogin }) {
     e.preventDefault();
     setError("");
 
-    if (!name || !email || !password) {
+    if (!name || !age || !phone || !gender || !email || !password) {
       setError("Please fill in all fields.");
       return;
     }
 
-    const result = onSignup({ name, email, password, role });
+    const result = onSignup({
+      name,
+      age,
+      phone,
+      gender,
+      email,
+      password,
+      role,
+    });
 
     if (!result.success) {
       if (result.reason === "exists") {
@@ -35,10 +46,10 @@ function Signup({ onSignup, onShowLogin }) {
       <div className="card-header">
         <div>
           <h1 id="signup-title" className="card-title">
-            Create Work-Study Account
+            Create EduWork Account
           </h1>
           <p className="card-subtitle">
-            Sign up as a student or admin to access the portal.
+            Sign up to access job applications and work-study tools.
           </p>
         </div>
       </div>
@@ -46,7 +57,7 @@ function Signup({ onSignup, onShowLogin }) {
       <form onSubmit={handleSubmit} aria-label="Signup form">
         <div className="form-group">
           <label>
-            Name
+            Full Name
             <input
               className="input"
               type="text"
@@ -56,6 +67,58 @@ function Signup({ onSignup, onShowLogin }) {
               required
             />
           </label>
+        </div>
+
+        <div className="form-row">
+          <label>
+            Age
+            <input
+              className="input"
+              type="number"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              placeholder="18"
+              required
+            />
+          </label>
+
+          <label>
+            Phone Number
+            <input
+              className="input"
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="9876543210"
+              required
+            />
+          </label>
+        </div>
+
+        <div className="form-group">
+          <span className="small">Gender:</span>
+          <div style={{ display: "flex", gap: "1rem", marginTop: "0.35rem" }}>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                value="Male"
+                checked={gender === "Male"}
+                onChange={() => setGender("Male")}
+              />{" "}
+              Male
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                value="Female"
+                checked={gender === "Female"}
+                onChange={() => setGender("Female")}
+              />{" "}
+              Female
+            </label>
+          </div>
         </div>
 
         <div className="form-group">
@@ -87,14 +150,8 @@ function Signup({ onSignup, onShowLogin }) {
         </div>
 
         <div className="form-group">
-          <span className="small">Select role for this account:</span>
-          <div
-            style={{
-              display: "flex",
-              gap: "0.75rem",
-              marginTop: "0.25rem",
-            }}
-          >
+          <span className="small">Account Type:</span>
+          <div style={{ display: "flex", gap: "1rem", marginTop: "0.35rem" }}>
             <label>
               <input
                 type="radio"
